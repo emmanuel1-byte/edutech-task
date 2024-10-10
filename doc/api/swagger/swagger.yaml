@@ -4,11 +4,11 @@ info:
   description: API documentation for EduTech backend with various modules like Authentication, Category, Course, Profile, Review, and Enrollment.
   version: 1.0.0
   contact:
-    name: Support
-    email: support@edutech.com
+    name: Emmanuel
+    email: emmanuelhilary9@gmail.com
 
 servers:
-  - url: http://localhost:3000/api
+  - url: https://edutech-task.onrender.com/api
 
 components:
   securitySchemes:
