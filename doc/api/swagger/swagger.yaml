@@ -1,0 +1,214 @@
+openapi: 3.0.0
+info:
+  title: EduTech Backend Task API
+  description: API documentation for EduTech backend with various modules like Authentication, Category, Course, Profile, Review, and Enrollment.
+  version: 1.0.0
+  contact:
+    name: Support
+    email: support@edutech.com
+
+servers:
+  - url: http://localhost:3000/api
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: Authentication
+    description: User authentication and authorization
+  - name: Category
+    description: Operations for managing categories
+  - name: Course
+    description: Operations for managing courses
+  - name: Profile
+    description: Operations for managing user profiles
+  - name: Review
+    description: Operations for managing course reviews
+  - name: Enrollment
+    description: Operations for enrolling in courses
+
+paths:
+  /auth/signup:
+    post:
+      tags:
+        - Authentication
+      summary: Signup a new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullname:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              example:
+                fullname: Binta Lan
+                email: binta10@gmail.com
+                password: 12345678
+      responses:
+        '201':
+          description: User created successfully
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              example:
+                email: binta10@gmail.com
+                password: 12345678
+      responses:
+        '200':
+          description: User logged in successfully
+
+  /auth/google:
+    get:
+      tags:
+        - Authentication
+      summary: Login using Google OAuth
+      description: Redirects the user to Google's OAuth consent screen.
+      responses:
+        '302':
+          description: Redirects to Google OAuth consent screen.
+
+  /auth/google/callback:
+    get:
+      tags:
+        - Authentication
+      summary: Google OAuth callback
+      description: Endpoint to handle the OAuth callback after user authentication via Google.
+      parameters:
+        - name: code
+          in: query
+          required: true
+          description: Authorization code returned by Google after authentication
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User successfully authenticated via Google
+        '400':
+          description: Invalid OAuth callback request
+
+  /category:
+    get:
+      tags:
+        - Category
+      summary: Get list of categories
+      responses:
+        '200':
+          description: List of categories
+
+  /courses/new-courses:
+    get:
+      tags:
+        - Course
+      summary: List new courses
+      responses:
+        '200':
+          description: List of new courses
+
+  /courses/popular-courses:
+    get:
+      tags:
+        - Course
+      summary: List popular courses
+      responses:
+        '200':
+          description: List of popular courses
+
+  /courses/{courseId}:
+    get:
+      tags:
+        - Course
+      summary: Get course details
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Course details
+      security:
+        - BearerAuth: []
+
+  /profiles/me:
+    get:
+      tags:
+        - Profile
+      summary: Get the logged-in user's profile
+      responses:
+        '200':
+          description: User profile
+      security:
+        - BearerAuth: []
+
+  /reviews/{courseId}:
+    post:
+      tags:
+        - Review
+      summary: Create a review for a course
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                rating:
+                  type: integer
+              example:
+                content: I Love this course
+                rating: 5
+      responses:
+        '201':
+          description: Review created successfully
+      security:
+        - BearerAuth: []
+
+  /enrollment/{courseId}:
+    post:
+      tags:
+        - Enrollment
+      summary: Enroll in a course
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Enrollment created successfully
+      security:
+        - BearerAuth: []
